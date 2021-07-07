@@ -1,5 +1,7 @@
 class Kettle(object):
 
+    power_source = "electricity"
+
     def __init__(self, name, price):
         self.name = name
         self.price = price
@@ -32,4 +34,20 @@ print(kenwood.on)
 # class can be dynamic modified by doing something like this below:
 kenwood.power = 1.5
 print(kenwood.power)
-print(hamilton.power)
+# print(hamilton.power)
+
+print("Switching to atomic power")
+Kettle.power_source = "atomic"
+
+print(Kettle.power_source)
+print("Switch kenwood to gas")
+kenwood.power_source = "gas"
+
+print(kenwood.power_source)
+print(hamilton.power_source)
+print(Kettle.__dict__)
+print(kenwood.__dict__)
+print(hamilton.__dict__)
+
+print("******")
+print(globals())
