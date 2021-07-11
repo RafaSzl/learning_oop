@@ -1,4 +1,4 @@
-class Song
+class Song:
     """Class to represent a song
     Attributes:
         title (str)
