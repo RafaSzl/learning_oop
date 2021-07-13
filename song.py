@@ -101,6 +101,27 @@ class Artist:
         """
         self.albums.append(album)
 
+    def add_song(self, name, year, title):
+        """Add new song to the collection of albums
+        This method will add the song to an album in the collection.
+        A new album will be created in the collection if it doesn't already exist.
+
+        Args:
+            name (str): The name of the album
+            year (int): The year the album was produced
+            title (str): The title of the song
+        """
+        album_found = find_object(name, self.albums)
+        if album_found is None:  # if it does not exist in our albums attribute
+            print(name + " not found")
+            album_found = Album(name, year, self)
+            self.add_album(album_found)
+        else:
+            print("Found album " + name)
+
+        album_found.add_song(title)
+
+
 
 def find_object(field, object_list):
     """Check 'object_list to see if an object with a 'name' attribute equal to 'field' exists, return it if so."""
@@ -129,7 +150,7 @@ def load_data():
                 # We are just read details for a new artist
                 # retrieve the artist object if there is one, otherwise creaste a new artist obj and add it to the artist list.
                 new_artist = find_object(artist_field, artist_list)
-                if new_artist is None:
+                if new_artist is None:  # this is necessary due to how find_object func is written
                     new_artist = Artist(artist_field)
                     artist_list.append(new_artist)
                 new_album = None
@@ -141,7 +162,7 @@ def load_data():
                 # We are just read a new album for the current artist
                 # retrieve the album object if there is one, otherwise creaste a new album obj and add it to the artist collection.
                 new_album = find_object(album_field, new_artist.albums)
-                if new_album is None:
+                if new_album is None: # this is necessary due to how find_object func is written
                     new_album = Album(album_field, year_field, new_artist)
                     new_artist.add_album(new_album)
 
