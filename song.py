@@ -1,3 +1,6 @@
+# from __future__ import print_function
+# it allows to print in python 2 the things wrote in python 3
+
 class Song:
     """Class to represent a song
 
@@ -48,8 +51,15 @@ class Album:
             self.artist = artist
 
         self.tracks = []
+        # Not every attribute needs to be a parameter of the init method. The parameters of the init
+        # method are for things that differ between objects, and for some classes, certain attributes start off the same
+        # for every object. Every Album object starts with an empty list for the tracks attribute, and there is no
+        # reason for this to be configurable.
 
-    def add_song(self, song, position=None):
+        # Keyword parameters like with artist=None are slightly different. They let you set a default value for
+        # a parameter that is going to be the same for most objects of a given class, but not all of them.
+
+    def add_song(self, song, position=None):  # position=None - add song to the end of a list
         """Adds a song to the track list
 
         Args:
@@ -92,6 +102,14 @@ class Artist:
         self.albums.append(album)
 
 
+def find_object(field, object_list):
+    """Check 'object_list to see if an object with a 'name' attribute equal to 'field' exists, return it if so."""
+    for item in object_list:
+        if item.name == field:
+            return item
+    return None
+
+
 def load_data():
     new_artist = None
     new_album = None
@@ -105,33 +123,31 @@ def load_data():
             print("{}:{}:{}:{}".format(artist_field, album_field, year_field, song_field))
 
             if new_artist is None:
-                new_artist = Artist(artist_field)  # creating an object
-            elif new_artist.name != artist_field:
+                new_artist = Artist(artist_field)  # creating an instance of Artist class (creating object)
+                artist_list.append(new_artist)  # we add artist to list bcs now we can check if artist is in a list and eventually move forward
+            elif new_artist.name != artist_field:  # zostanie wykonane jezeli bedzie spelniony ten warunek, jezeli nie to idzie dalej i pomija te czesc
                 # We are just read details for a new artist
-                # store current album in currents artists collection then create a new artist object
-                new_artist.add_album(new_album)
-                artist_list.append(new_artist)  # here we add new_artist to artist_list
-                new_artist = Artist(artist_field)  # initialize another artist?
-                new_album = None  # setting album to none to add it from a begining
+                # retrieve the artist object if there is one, otherwise creaste a new artist obj and add it to the artist list.
+                new_artist = find_object(artist_field, artist_list)
+                if new_artist is None:
+                    new_artist = Artist(artist_field)
+                    artist_list.append(new_artist)
+                new_album = None
 
             if new_album is None:
                 new_album = Album(album_field, year_field, new_artist)  # creating an object
+                new_artist.add_album(new_album)
             elif new_album.name != album_field:
                 # We are just read a new album for the current artist
-                # store current album in the artist's collection then create new album obcject
-                new_artist.add_album(new_album)  # here may be error
-                new_album = Album(album_field, year_field, new_artist)
+                # retrieve the album object if there is one, otherwise creaste a new album obj and add it to the artist collection.
+                new_album = find_object(album_field, new_artist.albums)
+                if new_album is None:
+                    new_album = Album(album_field, year_field, new_artist)
+                    new_artist.add_album(new_album)
 
             # create new song object and add it to the current album's collection
             new_song = Song(song_field, new_artist)
             new_album.add_song(new_song)
-
-        # After read the last line of the text file, we will have an artist and
-        # album that haven't been store - process them now
-        if new_artist is not None:
-            if new_album is not None:
-                new_artist.add_album(new_album)
-            artist_list.append(new_artist)
 
     return artist_list
 
