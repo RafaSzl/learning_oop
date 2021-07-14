@@ -26,6 +26,11 @@ class Song:
         self.artist = artist
         self.duration = duration
 
+    def get_title(self):  # GETTER FUNCTION - that its name
+        return self.title
+
+    name = property(get_title)  # on this line we allow this program to work even with title instead of name attribute
+
 
 class Album:
     """Class to represent an Album, using it's track list
@@ -63,16 +68,19 @@ class Album:
         """Adds a song to the track list
 
         Args:
-        :param song: A song to add
+        :param song: The title of a song to add.
         :param position: If specified, the song will be added to that position in the track list- inserting
         it between other songs if necessary.
             Otherwise, the song will be added to the end of the list.
         :return:
         """
-        if position is None:
-            self.tracks.append(song)
-        else:
-            self.tracks.insert(position, song)
+        song_found = find_object(song, self.tracks)
+        if song_found is None:
+            song_found = Song(song, self.artist)
+            if position is None:
+                self.tracks.append(song_found)
+            else:
+                self.tracks.insert(position, song_found)  # doda piosenki na koncu listy dzieki insert i position=None
 
 
 class Artist:
@@ -122,9 +130,8 @@ class Artist:
         album_found.add_song(title)
 
 
-
 def find_object(field, object_list):
-    """Check 'object_list to see if an object with a 'name' attribute equal to 'field' exists, return it if so."""
+    """Check 'object_list' to see if an object with a 'name' attribute equal to 'field' exists, return it if so."""
     for item in object_list:
         if item.name == field:
             return item
