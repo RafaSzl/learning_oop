@@ -6,24 +6,20 @@ class Song:
 
     Attributes:
         title (str)
-        artist (Artist)
         duration (int)
-    
     """
 
-    def __init__(self, title, artist, duration=0):  # duration default to zero
+    def __init__(self, title, duration=0):  # duration default to zero
 
         # Below is the docstring for init method from line 12 to 19
         """Song init method
 
         Args:
         :param title: Initialises the 'title' attribute
-        :param artist: At Artist object representing the song's creator
         :param duration: Initial value for the 'duration' attribute.
                         Will default to zero if not specified
         """
         self.title = title
-        self.artist = artist
         self.duration = duration
 
     def get_title(self):  # GETTER FUNCTION - that its name
@@ -36,9 +32,8 @@ class Album:
     """Class to represent an Album, using it's track list
 
     Attributes:
-        name (str): The name of an album
-        year (int): The year album was released
-        artist (Artist): The artist responsible for the album.
+        name (str): The name of an album.
+        year (int): The year album was released.
         If not specified the artist will default be tnamed "Various Artists".
         tracks (Lists[Song]): A list of the songs on the album.
 
@@ -46,14 +41,9 @@ class Album:
             add_song: Used to add a new song to the album's track list.
     """
 
-    def __init__(self, name, year, artist=None):
+    def __init__(self, name, year):
         self.name = name
         self.year = year
-
-        if artist is None:
-            self.artist = Artist("Various Artists")
-        else:
-            self.artist = artist
 
         self.tracks = []
         # Not every attribute needs to be a parameter of the init method. The parameters of the init
@@ -76,10 +66,11 @@ class Album:
         """
         song_found = find_object(song, self.tracks)
         if song_found is None:
-            song_found = Song(song, self.artist)
+            song_found = Song(song)
             if position is None:
-                self.tracks.append(song_found)
+                self.tracks.append(song_found.name)
             else:
+                print("Found song " + song)
                 self.tracks.insert(position, song_found)  # doda piosenki na koncu listy dzieki insert i position=None
 
 
@@ -122,7 +113,7 @@ class Artist:
         album_found = find_object(name, self.albums)
         if album_found is None:  # if it does not exist in our albums attribute
             print(name + " not found")
-            album_found = Album(name, year, self)
+            album_found = Album(name, year)
             self.add_album(album_found)
         else:
             print("Found album " + name)
@@ -163,14 +154,14 @@ def load_data():
                 new_album = None
 
             if new_album is None:
-                new_album = Album(album_field, year_field, new_artist)  # creating an object
+                new_album = Album(album_field, year_field)  # creating an object
                 new_artist.add_album(new_album)
             elif new_album.name != album_field:
                 # We are just read a new album for the current artist
                 # retrieve the album object if there is one, otherwise creaste a new album obj and add it to the artist collection.
                 new_album = find_object(album_field, new_artist.albums)
                 if new_album is None: # this is necessary due to how find_object func is written
-                    new_album = Album(album_field, year_field, new_artist)
+                    new_album = Album(album_field, year_field)
                     new_artist.add_album(new_album)
 
             # create new song object and add it to the current album's collection
