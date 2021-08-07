@@ -15,7 +15,7 @@ class Wing(object):
 class Duck(object):
 
     def __init__(self):
-        self.wing = Wing(1.8)
+        self._wing = Wing(1.8) # we created new Wing class object and assigned it to _wing attribute of Duck class
 
     def walk(self):
         print("tap tap tap")
@@ -50,6 +50,7 @@ class Penguin(object):
 
 if __name__ == '__main__':
     donald = Duck()
+    donald.fly()
     # test_duck(donald)
     #
     # percy = Penguin()
